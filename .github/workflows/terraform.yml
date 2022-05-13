@@ -48,6 +48,7 @@ jobs:
         export AWS_SESSION_TOKEN="${{ secrets.AWS_SESSION_TOKEN }}"
         export AWS_REGION="${{ secrets.REGION }}"
         terraform plan -out tfplan
+        terraform apply tfplan
 
     - name: Create Terraform Plan Artifact for Destroy
       if: contains(github.event.inputs.choice, 'destroy')
@@ -69,13 +70,4 @@ jobs:
         export AWS_SESSION_TOKEN="${{ secrets.AWS_SESSION_TOKEN }}"
         export AWS_REGION="${{ secrets.REGION }}"
         terraform plan -destroy -out tfplan
-
-    - name: Terraform Apply
-      if: contains(github.event.inputs.choice, 'create')
-      run: |
-          terraform apply tfplan
-
-    - name: Terraform Destroy
-      if: contains(github.event.inputs.choice, 'destroy')
-      run: |
-          terraform apply -destroy tfplan
+        terraform apply -destroy tfplan
