@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = "{{ local.local_data.aws_region }}"
+  region  = "us-east-1"
   default_tags {
     tags = {
       Environment   = local.local_data.tag_env
