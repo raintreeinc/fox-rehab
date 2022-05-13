@@ -19,6 +19,15 @@ resource "aws_launch_template" "this" {
       volume_type = "gp2"
     }
   }
+  block_device_mappings {
+    device_name = "xvdca"
+    ebs {
+      volume_size = 32
+      delete_on_termination = true
+      encrypted = true
+      volume_type = "gp2"
+    }
+  }
   disable_api_termination = false
   ebs_optimized = true
   image_id = data.aws_ami.this.image_id
