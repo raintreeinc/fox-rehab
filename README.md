@@ -1,2 +1,2 @@
-# template-terraform-module
-Template structure for any Terraform module created by DevOps team
+[![tfsec](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec-analysis.yml/badge.svg)](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec-analysis.yml)
+# Introduction
