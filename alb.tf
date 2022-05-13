@@ -3,7 +3,7 @@ resource "aws_lb" "this" {
   internal                    = false
   load_balancer_type          = "application"
   security_groups             = [aws_security_group.this.id]
-  subnets                     = local.local_data.vpc_subnets
+  subnets                     = local.local_data.vpc_public_app_subnets
   enable_deletion_protection  = false
   access_logs {
     bucket  = aws_s3_bucket.this.bucket
