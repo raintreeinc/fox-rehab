@@ -46,6 +46,7 @@ jobs:
         export AWS_SESSION_TOKEN="${{ env.AWS_SESSION_TOKEN }}"
         export AWS_DEFAULT_REGION="${{ env.REGION }}"
         sudo apt-get install jq moreutils
+        jq '.aws_region = "${{ env.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_env = "${{ env.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_client = "${{ secrets.TAG_CLIENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
