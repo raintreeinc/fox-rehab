@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket                = "${local.local_data.tag_prefix}-${local.local_data.tag_env}-${local.local_data.tag_client}-tfstate"
+  bucket                = "${lower(local.local_data.tag_prefix)}-${lower(local.local_data.tag_env)}-${lower(local.local_data.tag_client)}-tfstate"
   lifecycle {
     prevent_destroy     = true
   }
