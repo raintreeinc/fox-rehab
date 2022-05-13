@@ -28,18 +28,15 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Terraform Initialize
+    - name: Create Terraform Plan Artifact for Apply
+      if: contains(github.event.inputs.choice, 'create')
       run: |
         terraform init -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           -backend-config="token=${{ secrets.AWS_SESSION_TOKEN }}" \
           -backend-config="region=${{ secrets.REGION }}" \
           -backend-config="bucket=${{ secrets.BUCKET }}" \
-          -backend-config="key=${{ secrets.ENVIRONMENT }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
-
-    - name: Create Terraform Plan Artifact for Apply
-      if: contains(github.event.inputs.choice, 'create')
-      run: |
+          -backend-config="key=${{ secrets.ENVIRONMENT }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate"
         sudo apt-get install jq moreutils
         jq '.aws_region = "${{ secrets.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_env = "${{ secrets.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
@@ -51,6 +48,12 @@ jobs:
     - name: Create Terraform Plan Artifact for Destroy
       if: contains(github.event.inputs.choice, 'destroy')
       run: |
+        terraform init -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          -backend-config="token=${{ secrets.AWS_SESSION_TOKEN }}" \
+          -backend-config="region=${{ secrets.REGION }}" \
+          -backend-config="bucket=${{ secrets.BUCKET }}" \
+          -backend-config="key=${{ secrets.ENVIRONMENT }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate"
         sudo apt-get install jq moreutils
         jq '.aws_region = "${{ secrets.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_env = "${{ secrets.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
@@ -58,7 +61,6 @@ jobs:
         jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
         terraform plan -destroy -out tfplan
-
 
 #    - name: Terraform Apply
 #      run: |
