@@ -1,2 +1,2 @@
-[![tfsec](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec-analysis.yml/badge.svg)](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec-analysis.yml)
+[![tfsec](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec.yml/badge.svg)](https://github.com/raintreeinc/fox-rehab/actions/workflows/tfsec.yml)
 # Introduction
