@@ -3,21 +3,18 @@ name: 'Terraform'
 on:
   workflow_dispatch:
     inputs:
-      name:
+      choice:
         type: choice
-        description: Choose Environment
-        options: 
-        - SANDBOX
-        - DEV
-        - QA
-        - STAGING
-        - PROD
+        description: Do you wish to create or destroy the infrastructure?
+        options:
+        - create
+        - destroy
 
 jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.name }}
+    environment: SANDBOX
     defaults:
       run:
         shell: bash
@@ -40,7 +37,8 @@ jobs:
           -backend-config="bucket=${{ env.BUCKET }}" \
           -backend-config="key=${{ github.event.inputs.name }}/${{ env.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
 
-    - name: Create Terraform Plan Artifact
+    - name: Create Terraform Plan Artifact for Apply
+      if: contains(github.event.inputs.choice, 'create')
       run: |
         sudo apt-get install jq moreutils
         jq '.aws_region = "${{ env.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
@@ -49,6 +47,18 @@ jobs:
         jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
         terraform plan -out tfplan
+
+    - name: Create Terraform Plan Artifact for Destroy
+      if: contains(github.event.inputs.choice, 'destroy')
+      run: |
+        sudo apt-get install jq moreutils
+        jq '.aws_region = "${{ env.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_env = "${{ env.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_client = "${{ secrets.TAG_CLIENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
+        terraform plan -destroy -out tfplan
+
 
 #    - name: Terraform Apply
 #      run: |
