@@ -18,6 +18,14 @@ resource "aws_security_group" "this" {
     from_port = 443
     to_port = 443
   }
+  ingress {
+    description = "Inbound Management"
+    cidr_blocks = ["73.171.35.142/32"]
+    ipv6_cidr_blocks = ["2601:5c2:1:fc0:755b:ca7c:aac1:2e39/128"]
+    protocol = "tcp"
+    from_port = 3389
+    to_port = 3389
+  }
   egress {
     description = "Outbound Allow List"
     cidr_blocks = ["0.0.0.0/0"]

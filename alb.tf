@@ -5,11 +5,6 @@ resource "aws_lb" "this" {
   security_groups             = [aws_security_group.this.id]
   subnets                     = local.local_data.vpc_public_app_subnets
   enable_deletion_protection  = false
-  access_logs {
-    bucket  = aws_s3_bucket.this.bucket
-    prefix  = "${lower(local.local_data.tag_client)}"
-    enabled = true
-  }
 }
 
 resource "aws_lb_target_group" "this" {
