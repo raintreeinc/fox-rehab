@@ -26,23 +26,23 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        cli_config_credentials_token: ${{ env.TF_API_TOKEN }}
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     - name: Terraform Initialize
       run: |
-        terraform init -backend-config="access_key=${{ env.AWS_ACCESS_KEY_ID }}" \
-          -backend-config="secret_key=${{ env.AWS_SECRET_ACCESS_KEY }}" \
-          -backend-config="token=${{ env.AWS_SESSION_TOKEN }}" \
-          -backend-config="region=${{ env.REGION }}" \
-          -backend-config="bucket=${{ env.BUCKET }}" \
-          -backend-config="key=${{ github.event.inputs.name }}/${{ env.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
+        terraform init -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          -backend-config="token=${{ secrets.AWS_SESSION_TOKEN }}" \
+          -backend-config="region=${{ secrets.REGION }}" \
+          -backend-config="bucket=${{ secrets.BUCKET }}" \
+          -backend-config="key=${{ github.event.inputs.name }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
 
     - name: Create Terraform Plan Artifact for Apply
       if: contains(github.event.inputs.choice, 'create')
       run: |
         sudo apt-get install jq moreutils
-        jq '.aws_region = "${{ env.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
-        jq '.tag_env = "${{ env.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.aws_region = "${{ secrets.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_env = "${{ secrets.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_client = "${{ secrets.TAG_CLIENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
@@ -52,8 +52,8 @@ jobs:
       if: contains(github.event.inputs.choice, 'destroy')
       run: |
         sudo apt-get install jq moreutils
-        jq '.aws_region = "${{ env.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
-        jq '.tag_env = "${{ env.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.aws_region = "${{ secrets.REGION }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_env = "${{ secrets.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_client = "${{ secrets.TAG_CLIENT }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
         jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
