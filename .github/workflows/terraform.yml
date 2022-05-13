@@ -1,0 +1,55 @@
+name: 'Terraform'
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Choose Environment
+        options: 
+        - SANDBOX
+      message:
+        required: true
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.name }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Initialize
+      run: |
+        export AWS_ACCESS_KEY_ID="${{ env.AWS_ACCESS_KEY_ID }}"
+        export AWS_SECRET_ACCESS_KEY="${{ env.AWS_SECRET_ACCESS_KEY }}"
+        export AWS_SESSION_TOKEN="${{ env.AWS_SESSION_TOKEN }}"
+        export AWS_REGION="${{ env.REGION }}"
+        terraform init
+
+    - name: Create Terraform Plan Artifact
+      run: |
+        export AWS_ACCESS_KEY_ID="${{ env.AWS_ACCESS_KEY_ID }}"
+        export AWS_SECRET_ACCESS_KEY="${{ env.AWS_SECRET_ACCESS_KEY }}"
+        export AWS_SESSION_TOKEN="${{ env.AWS_SESSION_TOKEN }}"
+        export AWS_REGION="${{ env.REGION }}"
+        sudo apt-get install jq moreutils
+        jq '.tag_env = "${{ env.ENVIRONMENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_client = "${{ secrets.TAG_CLIENT }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_owner = "${{ secrets.TAG_OWNER }}"' variables.tfvars.json|sponge variables.tfvars.json
+        jq '.tag_prefix = "${{ secrets.TAG_PREFIX }}"' variables.tfvars.json|sponge variables.tfvars.json
+        terraform plan -out tfplan
+
+#    - name: Terraform Apply
+#      run: |
+#        terraform apply tfplan
