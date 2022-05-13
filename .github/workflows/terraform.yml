@@ -70,6 +70,12 @@ jobs:
         export AWS_REGION="${{ secrets.REGION }}"
         terraform plan -destroy -out tfplan
 
-#    - name: Terraform Apply
-#      run: |
-#        terraform apply tfplan
+    - name: Terraform Apply
+      if: contains(github.event.inputs.choice, 'create')
+      run: |
+          terraform apply tfplan
+
+    - name: Terraform Destroy
+      if: contains(github.event.inputs.choice, 'destroy')
+      run: |
+          terraform apply -destroy tfplan
