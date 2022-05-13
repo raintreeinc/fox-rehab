@@ -8,8 +8,10 @@ on:
         description: Choose Environment
         options: 
         - SANDBOX
-      message:
-        required: true
+        - DEV
+        - QA
+        - STAGING
+        - PROD
 
 jobs:
   terraform:
