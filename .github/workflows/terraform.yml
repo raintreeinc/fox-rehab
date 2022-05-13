@@ -35,7 +35,7 @@ jobs:
           -backend-config="token=${{ secrets.AWS_SESSION_TOKEN }}" \
           -backend-config="region=${{ secrets.REGION }}" \
           -backend-config="bucket=${{ secrets.BUCKET }}" \
-          -backend-config="key=${{ github.event.inputs.name }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
+          -backend-config="key=${{ secrets.ENVIRONMENT }}/${{ secrets.REGION }}/${{ secrets.TAG_CLIENT }}.tfstate" \
 
     - name: Create Terraform Plan Artifact for Apply
       if: contains(github.event.inputs.choice, 'create')
