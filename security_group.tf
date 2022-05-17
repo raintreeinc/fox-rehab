@@ -19,6 +19,14 @@ resource "aws_security_group" "this" {
     to_port = 443
   }
   ingress {
+    description = "Inbound Raintree Service Allow"
+    cidr_blocks = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    protocol = "tcp"
+    from_port = 10021
+    to_port = 10021
+  }
+  ingress {
     description = "Inbound Management"
     cidr_blocks = ["73.171.35.142/32"]
     ipv6_cidr_blocks = ["2601:5c2:1:fc0:755b:ca7c:aac1:2e39/128"]
