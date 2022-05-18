@@ -3,11 +3,11 @@ resource "aws_security_group" "this" {
   description = "Terraform-managed security group"
   vpc_id = local.local_data.vpc_id
     ingress {
-    description = "Inbound MySQL Allow"
+    description = "Internal Allow List"
     cidr_blocks = ["10.0.0.0/8"]
-    protocol = "tcp"
-    from_port = 3308
-    to_port = 3308
+    protocol = -1
+    from_port = 0
+    to_port = 0
   }
   ingress {
     description = "Inbound HTTP Allow"
