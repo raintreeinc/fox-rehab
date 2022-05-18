@@ -2,7 +2,6 @@ resource "aws_lb" "this" {
   name                        = "NLB-${upper(local.local_data.tag_prefix)}-${upper(local.local_data.tag_env)}-${upper(local.local_data.tag_client)}"
   internal                    = false
   load_balancer_type          = "network"
-  security_groups             = [aws_security_group.this.id]
   subnets                     = local.local_data.vpc_public_app_subnets
   enable_deletion_protection  = false
 }
