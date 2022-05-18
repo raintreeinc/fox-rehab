@@ -42,6 +42,6 @@ jobs:
         uses: slackapi/slack-github-action@v1.19.0
         with:
           channel-id: 'C039M5L7ZPU'
-          slack-message: "GitHub build result: ${{ job.status }}"
+          slack-message: "GitHub tfsec build result for ${{ secrets.TAG_CLIENT }}: ${{ job.status }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
