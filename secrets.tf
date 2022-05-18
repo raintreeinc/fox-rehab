@@ -6,5 +6,5 @@ resource "aws_secretsmanager_secret" "this" {
 
 resource "aws_secretsmanager_secret_version" "this" {
   secret_id     = aws_secretsmanager_secret.this.id
-  secret_string = jsonencode(tomap({"Keypair" = aws_key_pair.this.key_name, "Public Key" = tls_private_key.this.public_key_pem, "Private Key" = tls_private_key.this.private_key_pem}))
+  secret_string = jsonencode(tomap({"Keypair" = aws_key_pair.this.key_name, "Public Key" = tls_private_key.this.public_key_pem, "Private Key" = tls_private_key.this.private_key_pem, "AWS_ACCESS_KEY_ID" = local.access_key, "AWS_SECRET_ACCESS_KEY" = local.secret_key}))
 }
