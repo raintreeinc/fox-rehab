@@ -19,11 +19,3 @@ resource "aws_iam_group_policy_attachment" "this" {
 resource "aws_iam_access_key" "this" {
   user    = aws_iam_user.this.name
 }
-
-resource "aws_iam_group_membership" "this" {
-  name = aws_iam_group.this.name
-  users = [
-    aws_iam_user.this.name
-  ]
-  group = aws_iam_group.group.name
-}
