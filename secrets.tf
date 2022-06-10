@@ -2,6 +2,9 @@ resource "aws_secretsmanager_secret" "this" {
   name        = "${lower(local.local_data.tag_prefix)}-${lower(local.local_data.tag_env)}-${lower(local.local_data.tag_client)}"
   description = "${local.local_data.tag_client} secrets"
   kms_key_id  = aws_kms_key.this.id
+  lifecycle {
+    prevent_destroy     = true
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
